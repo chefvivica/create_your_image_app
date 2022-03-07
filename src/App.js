@@ -1,29 +1,27 @@
 import './App.css';
 import { SketchPicker } from 'react-color'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function App() {
 
-  const [text, setText] = useState('');
-  const defaultImageUrl = 'https://assets.imgix.net/examples/butterfly.jpg?';
-  const [background, setBackground] = useState("#fff");
+  const [formText, setFormText] = useState('');
+  const [text, setText] = useState("")
+  const [background, setBackground] = useState("");
+  const [url, setUrl] = useState('https://assets.imgix.net/examples/butterfly.jpg?')
 
-
+  useEffect(() => {
+    setUrl(`https://assets.imgix.net/examples/butterfly.jpg?${text}${background}&w=640&txtclr=fff&txtalign=center%2Cmiddle&txtsize=48&bm=normal&balph=50`)
+  }, [url, text, background])
   const texthandler = (e) => {
+    setFormText(e.target.value)
     const myEncodedText = (e.target.value).split(' ').join('%20');
-    setText(myEncodedText);
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+    setText(`txt=${myEncodedText}`)
   }
 
   const handleChangeComplete = (color) => {
-    setBackground(color.hex.slice(1))
+    setBackground(`&blend=${color.hex.slice(1)}`)
   }
 
-  const url = `${defaultImageUrl}txt=${text}&blend=${background}&w=640&txtclr=fff&txtalign=center%2Cmiddle&txtsize=48&bm=normal&balph=50`;
 
   return (
 
@@ -41,13 +39,8 @@ function App() {
       {/* user input */}
       <div className='user-input'>
         <div className='text-form'>
-          <form onSubmit={handleSubmit}>
-            <label>
-              <h2>Enter your text here:</h2>
-              <input type="text" name='textContent' onChange={texthandler} />
-
-            </label>
-          </form>
+          <h2>Enter your text here:</h2>
+          <input type="text" onChange={texthandler} value={formText} />
         </div>
         <div className='color-picker'>
           <h2>
